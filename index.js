@@ -39,7 +39,7 @@ module.exports = function(gulp) {
     jasmine.execute();
   });
 
-  gulp.task('build', () => {
+  gulp.task('build', function() {
     return gulp.src('src/**/*.js')
       .pipe(babel({
         presets: ['es2015']
