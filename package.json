@@ -1,6 +1,6 @@
 {
   "name": "@naujs/gulp-tasks",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,6 @@
     "babel-register": "^6.3.13",
     "gulp-babel": "^6.1.1",
     "gulp-eslint": "^1.1.1",
-    "gulp-rimraf": "^0.2.0",
     "jasmine": "^2.4.1"
   }
 }

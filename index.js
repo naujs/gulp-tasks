@@ -1,7 +1,6 @@
 var Jasmine = require('jasmine')
   , eslint = require('gulp-eslint')
-  , babel = require('gulp-babel'),
-  , rimraf = require('gulp-rimraf');
+  , babel = require('gulp-babel');
 
 var eslintrc = {
   "rules": {
@@ -89,9 +88,7 @@ module.exports = function(gulp) {
   });
 
   gulp.task('build', function() {
-    return gulp.src.('build/**/*.js')
-      .rimraf(rimraf({force: true}))
-      .src('src/**/*.js')
+    return gulp.src('src/**/*.js')
       .pipe(babel({
         presets: ['es2015']
       }))
