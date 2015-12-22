@@ -71,7 +71,8 @@ module.exports = function(gulp) {
     ];
     config.spec_dir = '.';
     config.helpers = [
-      'node_modules/babel-register/lib/node.js'
+      'node_modules/babel-register/lib/node.js',
+      'tests/helpers/**/*.js'
     ];
 
     jasmine.loadConfig(config);
