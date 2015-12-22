@@ -62,7 +62,7 @@ module.exports = function(gulp) {
       .pipe(eslint.failOnError());
   });
 
-  gulp.task('test', ['lint'], function(done) {
+  gulp.task('test', ['build', 'lint'], function(done) {
     var jasmine = new Jasmine()
       , config = {};
 
@@ -96,7 +96,7 @@ module.exports = function(gulp) {
       .pipe(gulp.dest('build'));
   });
 
-  gulp.task('default', ['test', 'build']);
+  gulp.task('default', ['test']);
 
   return gulp;
 }
