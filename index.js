@@ -98,7 +98,7 @@ module.exports = function(gulp) {
       .pipe(gulp.dest('build'));
   });
 
-  gulp.task('publish', function(done) {
+  gulp.task('publish', ['test'], function(done) {
     var child = spawn('npm publish', ['--access=public'], {cwd: process.cwd()})
       , stdout = ''
       , stderr = '';
