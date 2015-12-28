@@ -1,7 +1,7 @@
 var Jasmine = require('jasmine')
   , eslint = require('gulp-eslint')
   , babel = require('gulp-babel')
-  , spawn = require('child_process').spawn
+  , exec = require('child_process').exec
   , gutil = require('gulp-util');
 
 var eslintrc = {
@@ -99,26 +99,14 @@ module.exports = function(gulp) {
   });
 
   gulp.task('publish', ['test'], function(done) {
-    var child = spawn('npm publish', ['--access=public'], {cwd: process.cwd()})
-      , stdout = ''
-      , stderr = '';
-
-    child.stdout.setEncoding('utf8');
-
-    child.stdout.on('data', function (data) {
-      stdout += data;
-      gutil.log(data);
-    });
-
-    child.stderr.setEncoding('utf8');
-    child.stderr.on('data', function (data) {
-      stderr += data;
-      gutil.log(gutil.colors.red(data));
-      gutil.beep();
-    });
-
-    child.on('close', function(code) {
-      gutil.log('Done with exit code', code);
+    exec('npm publish --access=public', {
+      cwd: process.cwd()
+    }, function(error, stdout, stderr) {
+      if (error) {
+        gutil.log(gutil.colors.red(stderr));
+        return done(true);
+      }
+      gutil.log(stdout);
       done();
     });
   });
