@@ -1,6 +1,8 @@
 var Jasmine = require('jasmine')
   , eslint = require('gulp-eslint')
-  , babel = require('gulp-babel');
+  , babel = require('gulp-babel')
+  , spawn = require('child_process').spawn
+  , gutil = require('gulp-util');
 
 var eslintrc = {
   "rules": {
@@ -94,6 +96,31 @@ module.exports = function(gulp) {
         presets: ['es2015']
       }))
       .pipe(gulp.dest('build'));
+  });
+
+  gulp.task('publish', function(done) {
+    var child = spawn('npm publish', ['--access=public'], {cwd: process.cwd()})
+      , stdout = ''
+      , stderr = '';
+
+    child.stdout.setEncoding('utf8');
+
+    child.stdout.on('data', function (data) {
+      stdout += data;
+      gutil.log(data);
+    });
+
+    child.stderr.setEncoding('utf8');
+    child.stderr.on('data', function (data) {
+      stderr += data;
+      gutil.log(gutil.colors.red(data));
+      gutil.beep();
+    });
+
+    child.on('close', function(code) {
+      gutil.log('Done with exit code', code);
+      done();
+    });
   });
 
   gulp.task('default', ['test']);
