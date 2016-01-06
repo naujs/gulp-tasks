@@ -53,6 +53,10 @@ var eslintrc = {
 };
 
 module.exports = function(gulp) {
+  if (!gulp) {
+    gulp = require('gulp');
+  }
+
   gulp.task('lint', function() {
     var paths = [
       'src/**/*.js',
