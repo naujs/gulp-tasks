@@ -2,7 +2,8 @@ var Jasmine = require('jasmine')
   , eslint = require('gulp-eslint')
   , babel = require('gulp-babel')
   , exec = require('child_process').exec
-  , gutil = require('gulp-util');
+  , gutil = require('gulp-util')
+  , argv = require('yargs').argv;
 
 var eslintrc = {
   "rules": {
@@ -102,8 +103,44 @@ module.exports = function(gulp) {
       .pipe(gulp.dest('build'));
   });
 
-  gulp.task('publish', ['test'], function(done) {
+  gulp.task('publish', ['push'], function(done) {
     exec('npm publish --access=public', {
+      cwd: process.cwd()
+    }, function(error, stdout, stderr) {
+      if (error) {
+        gutil.log(gutil.colors.red(stderr));
+        return done(true);
+      }
+      gutil.log(stdout);
+      done();
+    });
+  });
+
+  gulp.task('push', ['version'], function(done) {
+    exec('git push && git push --tags', {
+      cwd: process.cwd()
+    }, function(error, stdout, stderr) {
+      if (error) {
+        gutil.log(gutil.colors.red(stderr));
+        return done(true);
+      }
+      gutil.log(stdout);
+      done();
+    });
+  });
+
+  gulp.task('version', ['test'], function(done) {
+    var command = 'npm version';
+
+    if (argv.major) {
+      command += ' major';
+    } else if (argv.minor) {
+      command += ' minor';
+    } else {
+      command += ' patch';
+    }
+
+    exec(command, {
       cwd: process.cwd()
     }, function(error, stdout, stderr) {
       if (error) {

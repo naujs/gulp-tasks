@@ -25,6 +25,7 @@
     "gulp-babel": "^6.1.1",
     "gulp-eslint": "^1.1.1",
     "gulp-util": "^3.0.7",
-    "jasmine": "^2.4.1"
+    "jasmine": "^2.4.1",
+    "yargs": "^3.31.0"
   }
 }
