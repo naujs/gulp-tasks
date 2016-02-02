@@ -79,8 +79,48 @@ module.exports = function(gulp) {
     config.spec_dir = '.';
     config.helpers = [
       'node_modules/babel-register/lib/node.js',
-      'tests/helpers/**/*.js'
+      process.cwd() + '/tests/helpers/**/*.js',
+      'node_modules/jasmine-promises/dist/jasmine-promises.js'
     ];
+
+    // Patch jasmine to support promise return
+    function fakeDone(fn) {
+      return function(done) {
+        try {
+          var result = fn.call(env);
+          if (result && result.then) {
+            result.then(function() {
+
+            }).then(done, done.fail);
+          } else {
+            done();
+          }
+        } catch (e) {
+          done.fail(e);
+        }
+      };
+    }
+
+    var env = jasmine.jasmine.getEnv();
+    var methods = [
+      'it',
+      'fit',
+      'beforeEach',
+      'beforeAll',
+      'afterEach',
+      'afterAll'
+    ];
+    var oldMethods = {};
+    methods.forEach(function(method) {
+      oldMethods[method] = env[method].bind(env);
+      env[method] = function() {
+        var args = Array.prototype.slice.apply(arguments);
+        if (typeof args[0] === 'function') {
+          return oldMethods[method](fakeDone(args[0].bind(env)), args[1]);
+        }
+        return oldMethods[method](args[0], fakeDone(args[1].bind(env)), args[2]);
+      }.bind(env);
+    });
 
     jasmine.loadConfig(config);
     jasmine.configureDefaultReporter({
